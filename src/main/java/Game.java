@@ -1,51 +1,69 @@
-import java.io.IOException;
-
 public class Game {
 
     private Board currentState;
     private Board previousState;
+    private int totalDeaths;
+    private int totalBirths;
+    private int currentAlive;
+    private int currentDead;
+    private static final int frequency=100;
 
     public Game(int m, int n) {
         currentState = new Board(m, n);
         previousState = new Board(m, n);
-    }
-
-    public void cloneBoard(){
-        for (int i=0; i<currentState.size(); i++){
-            for (int j=0; j<currentState.size(); j++){
-                previousState.getBoard()[i][j].setState(currentState.getBoard()[i][j].getState());
-            }
-        }
+        totalDeaths = 0;
+        totalBirths = 0;
+        currentAlive = 0;
+        currentDead = m * n;
     }
 
     public void tick(){
-        cloneBoard();
+        previousState.cloneBoardFrom(currentState);
         currentState.changeStates(previousState);
-        try {
-            System.out.write(currentState.toString().getBytes());
-            System.out.print("\r");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        totalBirths += currentState.getCurrentBirths();
+        totalDeaths += currentState.getCurrentDeaths();
+        currentAlive = currentState.getNumAliveCells();
+        currentDead = currentState.getNumDeadCells();
+        System.out.println(toString());
     }
 
-    public static void main(String args[]){
-        Game game1 = new Game(3, 3);
-        game1.currentState.setCell(0, 1);
-        game1.currentState.setCell(1,1);
-        game1.currentState.setCell(2,1);
-        try {
-            System.out.write(game1.currentState.toString().getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void setCellInitialState(int i, int j){
+        currentState.setCell(i, j);
+        currentAlive++;
+        currentDead--;
+    }
+
+    public void start(){
+        System.out.println(toString());
         while (true){
             try {
-                Thread.sleep(1000);
-                game1.tick();
+                Thread.sleep(frequency);
+                tick();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return currentState.toString() +
+                "Alive: " + currentAlive + "\n" +
+                "Dead: " + currentDead + "\n" +
+                "Births: " + totalBirths + "\n" +
+                "Deaths: " + totalDeaths + "\n\n";
+    }
+
+    public static void main(String args[]){
+        Game game1 = new Game(4, 4);
+        game1.setCellInitialState(0, 0);
+        game1.setCellInitialState(0, 1);
+        game1.setCellInitialState(1, 0);
+        game1.setCellInitialState(1, 1);
+        game1.setCellInitialState(2, 2);
+        game1.setCellInitialState(2, 3);
+        game1.setCellInitialState(3, 2);
+        game1.setCellInitialState(3, 3);
+        game1.start();
     }
 }

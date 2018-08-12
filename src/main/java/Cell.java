@@ -3,8 +3,8 @@ import com.vdurmont.emoji.EmojiParser;
 public class Cell {
     private boolean state;
     private Coordinates coordinates;
-    private static final String deadCellEmoji = ":white_circle:";
-    private static final String aliveCellEmoji = ":red_circle:";
+    private static final String deadCellEmoji = ":white_large_square:";
+    private static final String aliveCellEmoji = ":black_large_square:";
 
     public int getStateInt() {
         return state ? 1: 0;

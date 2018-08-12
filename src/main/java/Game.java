@@ -6,9 +6,17 @@ public class Game {
     private int totalBirths;
     private int currentAlive;
     private int currentDead;
-    private static final int frequency=100;
+    private static final int frequency=500;
+    private int rows;
+    private int columns;
+
+    public Game() {
+
+    }
 
     public Game(int m, int n) {
+        rows = m;
+        columns = n;
         currentState = new Board(m, n);
         previousState = new Board(m, n);
         totalDeaths = 0;
@@ -24,7 +32,15 @@ public class Game {
         totalDeaths += currentState.getCurrentDeaths();
         currentAlive = currentState.getNumAliveCells();
         currentDead = currentState.getNumDeadCells();
-        System.out.println(toString());
+        System.out.print(clearConsole() + toString());
+    }
+
+    private String clearConsole(){
+        StringBuilder backSpace = new StringBuilder();
+        for (int i=0; i<rows+4; i++){
+            backSpace.append("\033[1A\033[K");
+        }
+        return backSpace.toString();
     }
 
     public void setCellInitialState(int i, int j){
@@ -34,7 +50,7 @@ public class Game {
     }
 
     public void start(){
-        System.out.println(toString());
+        System.out.print(toString());
         while (true){
             try {
                 Thread.sleep(frequency);
@@ -51,19 +67,6 @@ public class Game {
                 "Alive: " + currentAlive + "\n" +
                 "Dead: " + currentDead + "\n" +
                 "Births: " + totalBirths + "\n" +
-                "Deaths: " + totalDeaths + "\n\n";
-    }
-
-    public static void main(String args[]){
-        Game game1 = new Game(4, 4);
-        game1.setCellInitialState(0, 0);
-        game1.setCellInitialState(0, 1);
-        game1.setCellInitialState(1, 0);
-        game1.setCellInitialState(1, 1);
-        game1.setCellInitialState(2, 2);
-        game1.setCellInitialState(2, 3);
-        game1.setCellInitialState(3, 2);
-        game1.setCellInitialState(3, 3);
-        game1.start();
+                "Deaths: " + totalDeaths + "\n";
     }
 }

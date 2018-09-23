@@ -11,6 +11,9 @@ public class Driver {
             case "beacon":
                 game = new Beacon();
                 break;
+            case "pulsar":
+                game = new Pulsar();
+                break;
             default:
                 game = new Game();
         }

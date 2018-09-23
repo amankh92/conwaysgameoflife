@@ -16,6 +16,7 @@ public class Driver {
                 break;
             default:
                 game = new Game();
+                break;
         }
         game.start();
     }
